@@ -1,0 +1,18 @@
+<div class="entry" *ngIf="pokemon" [ngClass]="{ selected: selected }">
+  <div class="pokeball-container">
+    <img
+      *ngIf="selected"
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Pok%C3%A9_Ball_icon.svg/240px-Pok%C3%A9_Ball_icon.svg.png"
+    />
+  </div>
+  <div class="id">
+    No <span>{{ pokemon.id.toString().padStart(4, "0") }}</span>
+  </div>
+  <div class="name">{{ pokemon.name }}</div>
+
+  <ul class="types">
+    <li *ngFor="let type of pokemon.types" ngClass="{{ type.toLowerCase() }}">
+      {{ type }}
+    </li>
+  </ul>
+</div>
