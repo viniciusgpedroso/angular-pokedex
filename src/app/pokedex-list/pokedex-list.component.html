@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="title">Pokemon List</div>
+  <div class="list-container">
+    <ul>
+      <li *ngFor="let p of pokemons">
+        <app-pokedex-entry
+          [pokemon]="p"
+          [selected]="p.id === selected"
+          (click)="onSelect(p.id)"
+        ></app-pokedex-entry>
+      </li>
+    </ul>
+  </div>
+</div>
