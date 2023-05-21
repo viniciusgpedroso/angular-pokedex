@@ -11,8 +11,8 @@
   <div class="name">{{ pokemon.name }}</div>
 
   <ul class="types">
-    <li *ngFor="let type of pokemon.types" ngClass="{{ type.toLowerCase() }}">
-      {{ type }}
+    <li *ngFor="let t of pokemon.types" ngClass="{{ t.type.name }}">
+      {{ t.type.name.toUpperCase() }}
     </li>
   </ul>
 </div>
