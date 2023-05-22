@@ -2,12 +2,17 @@ $scanLineWidth: 2px;
 
 .container {
   background-color: #ef5350;
-  padding-bottom: 48px;
-  padding-left: 16px;
-  padding-right: 16px;
+  border-radius: 12px;
+  margin: 2vh;
+  padding: 48px 16px 16px 16px;
   width: fit-content;
+  height: fit-content;
   max-width: 500px;
-  height: 100vh;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .title {
@@ -19,15 +24,13 @@ $scanLineWidth: 2px;
 
 .list-container {
   background-color: #e53935;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  padding-left: 4px;
-  padding-right: 4px;
+  padding: 16px 4px 16px 4px;
   border-radius: 12px;
   display: flex;
-  justify-content: center;
-  align-items: center;
   width: fit-content;
+  height: 50%;
+  overflow-x: hidden;
+  overflow-y: scroll;
   background-size: 100% $scanLineWidth * 2;
   /*** WEBKIT ***/
   background: -webkit-repeating-linear-gradient(
@@ -57,4 +60,42 @@ li {
 
 li {
   list-style-type: none;
+}
+
+.load-more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  border-radius: 10px;
+  padding: 10px;
+  width: 50px;
+  height: 50px;
+  background-color: #e53935;
+  border-color: white;
+  color: white;
+  font-size: 4em;
+  font-style: bold;
+  font-family: monospace;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #e53935;
+  border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: white;
 }
