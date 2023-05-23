@@ -9,7 +9,7 @@ import { PokemonListService } from '../services/pokemon-list.service';
 })
 export class PokedexListComponent implements OnInit {
   pokemons: PokeListEntry[] = [];
-  selected: Number = 1;
+  selected: number = 1;
 
   constructor(private service: PokemonListService) {}
 
@@ -17,8 +17,9 @@ export class PokedexListComponent implements OnInit {
     this.getPokemonList();
   }
 
-  onSelect(id: Number) {
+  onSelect(id: number) {
     this.selected = id;
+    this.service.setSelectedPokemon(id);
   }
 
   getPokemonList(limit = 20) {

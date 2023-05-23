@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, ReplaySubject, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment.development';
 import { PokeListEntry } from '../model/pokeData';
@@ -21,6 +21,7 @@ export class PokemonListService {
   private baseURL: string = '';
   private pokemonNameSet = new Set<string>();
   private pokemonList: PokeListEntry[] = [];
+  private selectedPokemon = new ReplaySubject<PokeListEntry>();
 
   constructor(private http: HttpClient) {
     this.baseURL = environment.pokeApi;
@@ -62,12 +63,15 @@ export class PokemonListService {
    * @param list pokemons list which the details will be fetched
    */
   private getPokemonsDetails(list: ListResult) {
+    const requests: Observable<PokeListEntry>[] = [];
     list.results.forEach((p) => {
       if (!this.pokemonNameSet.has(p.name)) {
-        this.getSinglePokemonDetails(p.url).subscribe((pokemon) =>
-          this.pokemonList.push(pokemon)
-        );
+        requests.push(this.getSinglePokemonDetails(p.url));
       }
+    });
+    // Avoid wrong order keeping requests parallel
+    forkJoin(requests).subscribe((pokemonList) => {
+      this.pokemonList.push(...pokemonList);
     });
   }
 
@@ -101,6 +105,29 @@ export class PokemonListService {
       catchError(this.handleError<ListResult>('getPokemonResultList'))
     );
     results.subscribe((result) => this.getPokemonsDetails(result));
+    this.selectedPokemon.next(this.pokemonList[0]);
     return this.pokemonList;
+  }
+
+  /**
+   * GET the currently selected pokemon
+   *
+   * @returns pokemon entry if the id is valid or null if isn't valid
+   */
+  getSelectedPokemon(): Observable<PokeListEntry> {
+    return this.selectedPokemon;
+  }
+
+  /**
+   * SET the selected pokemon based on its id.
+   *
+   * @param id: pokemon id
+   * @throws {Error} when an invalid id is provided
+   */
+  setSelectedPokemon(id: number) {
+    const index = id - 1;
+    if (index >= 0 && this.pokemonList.length > index)
+      this.selectedPokemon.next(this.pokemonList[index]);
+    else throw Error('Invalid id');
   }
 }
