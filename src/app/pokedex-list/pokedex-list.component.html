@@ -6,7 +6,7 @@
         <app-pokedex-entry
           [pokemon]="p"
           [selected]="p.id === selected"
-          (click)="onSelect(p.id)"
+          (click)="onSelect(p.id.valueOf())"
         ></app-pokedex-entry>
       </li>
     </ul>

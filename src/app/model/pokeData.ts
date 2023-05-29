@@ -9,10 +9,31 @@ export type PokeTypesEntry = {
 };
 
 export type PokeListEntry = {
-  id: Number;
+  id: number;
   name: string;
   types: PokeTypesEntry[];
 };
+
+export type PokeSprite = {
+  front_default: string;
+};
+
+export type PokeStat = {
+  name: string;
+  url: string;
+};
+
+export type PokeBaseStat = {
+  base_stat: number;
+  stat: PokeStat;
+};
+
+export interface PokeDetails extends PokeListEntry {
+  sprites: PokeSprite;
+  stats: PokeBaseStat[];
+  weight: number;
+  height: number;
+}
 
 export enum PokeType {
   BUG = 'bug',

@@ -3,11 +3,10 @@ $scanLineWidth: 2px;
 .container {
   background-color: #ef5350;
   border-radius: 12px;
-  margin: 2vh;
   padding: 48px 16px 16px 16px;
   width: fit-content;
   height: fit-content;
-  max-width: 500px;
+  min-width: 500px;
   max-height: 85vh;
   display: flex;
   flex-direction: column;
