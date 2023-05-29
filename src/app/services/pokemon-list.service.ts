@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject, forkJoin, of } from 'rxjs';
+import { Subject, Observable, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment.development';
-import { PokeListEntry } from '../model/pokeData';
+import { PokeDetails } from '../model/pokeData';
 
 type PokemonResult = {
   name: string;
@@ -20,8 +20,9 @@ type ListResult = {
 export class PokemonListService {
   private baseURL: string = '';
   private pokemonNameSet = new Set<string>();
-  private pokemonList: PokeListEntry[] = [];
-  private selectedPokemon = new ReplaySubject<PokeListEntry>();
+  private pokemonList: PokeDetails[] = [];
+  private firstSelected = false;
+  private selectedPokemon = new Subject<PokeDetails>();
 
   constructor(private http: HttpClient) {
     this.baseURL = environment.pokeApi;
@@ -47,13 +48,13 @@ export class PokemonListService {
    * Gets the details for a gingle pokemon entry
    *
    * @param url the url to fetch the details
-   * @returns An Observable of a PokeListEntry
+   * @returns An Observable of a PokeDetails
    */
-  private getSinglePokemonDetails(url: string): Observable<PokeListEntry> {
+  private getSinglePokemonDetails(url: string): Observable<PokeDetails> {
     return this.http
-      .get<PokeListEntry>(url)
+      .get<PokeDetails>(url)
       .pipe(
-        catchError(this.handleError<PokeListEntry>('getSinglePokemonDetails'))
+        catchError(this.handleError<PokeDetails>('getSinglePokemonDetails'))
       );
   }
 
@@ -63,7 +64,7 @@ export class PokemonListService {
    * @param list pokemons list which the details will be fetched
    */
   private getPokemonsDetails(list: ListResult) {
-    const requests: Observable<PokeListEntry>[] = [];
+    const requests: Observable<PokeDetails>[] = [];
     list.results.forEach((p) => {
       if (!this.pokemonNameSet.has(p.name)) {
         requests.push(this.getSinglePokemonDetails(p.url));
@@ -72,6 +73,10 @@ export class PokemonListService {
     // Avoid wrong order keeping requests parallel
     forkJoin(requests).subscribe((pokemonList) => {
       this.pokemonList.push(...pokemonList);
+      if (!this.firstSelected) {
+        this.firstSelected = true;
+        this.selectedPokemon.next(this.pokemonList[0]);
+      }
     });
   }
 
@@ -99,13 +104,12 @@ export class PokemonListService {
    *
    * @param limit: the amount of pokemons to be fetched
    * */
-  fetchAndAddPokemonList(limit: number): PokeListEntry[] {
+  fetchAndAddPokemonList(limit: number): PokeDetails[] {
     const offset = this.pokemonList.length;
     const results = this.getPokemonListResult(limit, offset).pipe(
       catchError(this.handleError<ListResult>('getPokemonResultList'))
     );
     results.subscribe((result) => this.getPokemonsDetails(result));
-    this.selectedPokemon.next(this.pokemonList[0]);
     return this.pokemonList;
   }
 
@@ -114,7 +118,7 @@ export class PokemonListService {
    *
    * @returns pokemon entry if the id is valid or null if isn't valid
    */
-  getSelectedPokemon(): Observable<PokeListEntry> {
+  getSelectedPokemon(): Observable<PokeDetails> {
     return this.selectedPokemon;
   }
 
