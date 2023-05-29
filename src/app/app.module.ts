@@ -6,9 +6,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PokedexEntryComponent } from './pokedex-entry/pokedex-entry.component';
 import { PokedexListComponent } from './pokedex-list/pokedex-list.component';
+import { PokedexDetailsComponent } from './pokedex-details/pokedex-details.component';
 
 @NgModule({
-  declarations: [AppComponent, PokedexEntryComponent, PokedexListComponent],
+  declarations: [AppComponent, PokedexEntryComponent, PokedexListComponent, PokedexDetailsComponent],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,0 +1,41 @@
+<div class="container">
+  <ng-container *ngIf="pokemon">
+    <div [ngClass]="[pokemon.types[0].type.name, 'pokemon-container']">
+      <img src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}" />
+      <div class="text-container">
+        <div class="title">
+          <div class="id">
+            No <span>{{ pokemon.id.toString().padStart(4, "0") }}</span>
+          </div>
+          <div class="name">{{ pokemon.name }}</div>
+        </div>
+        <ul class="types">
+          <li *ngFor="let t of pokemon.types" ngClass="{{ t.type.name }}">
+            {{ t.type.name.toUpperCase() }}
+          </li>
+        </ul>
+        <div class="hw">Weight: {{ pokemon.weight / 10 }} kg</div>
+        <div class="hw">Height: {{ pokemon.height / 10 }} m</div>
+        <div class="stats">
+          <div *ngFor="let s of pokemon.stats" class="stat">
+            <div class="stat-name">{{ s.stat.name }}</div>
+            <div class="stat-number">
+              {{
+                calculateBaseStatPercentage(s.base_stat)
+                  .toString()
+                  .padStart(2, "0")
+              }}
+            </div>
+            <div class="stat-bar">
+              <div
+                [ngStyle]="{
+                  width: calculateBaseStatPercentage(s.base_stat) + '%'
+                }"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

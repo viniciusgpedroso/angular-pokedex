@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { PokeListEntry, PokeType } from '../model/pokeData';
+import { PokeListEntry } from '../model/pokeData';
 
 @Component({
   selector: 'app-pokedex-entry',
